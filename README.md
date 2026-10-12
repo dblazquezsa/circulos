@@ -21,7 +21,7 @@ No hay que compilar nada: son archivos HTML, CSS y JavaScript. Funciona también
 
 1. Crea un repositorio y sube todo el contenido de esta carpeta a la raíz.
 2. En el repositorio: **Settings → Pages → Build and deployment**, elige *Deploy from a branch*, rama `main`, carpeta `/ (root)`.
-3. Cuando esté publicado, escribe la dirección en `js/config.js` (`urlSitio`) para que el código QR apunte siempre a ella.
+3. El sitio se publica en https://dblazquezsa.github.io/circulos/ (repositorio `circulos`). Esa dirección ya está en `js/config.js` (`urlSitio`), así que los códigos QR apuntan a ella aunque la página se abra desde otro lugar.
 
 ## Antes de la sesión
 
