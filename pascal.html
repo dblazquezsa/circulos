@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Triángulo de Pascal · Autómatas y Agentes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=JetBrains+Mono:wght@400;700&display=swap">
+<link rel="stylesheet" href="../css/estilo.css">
+<style>
+  .preguntas { display: flex; flex-direction: column; gap: 10px; max-width: 70ch; }
+  .preguntas ol { margin: 0; padding-left: 1.3em; display: flex; flex-direction: column; gap: 6px; }
+  .preguntas h2 { font-size: 1.3rem; }
+</style>
+</head>
+<body>
+<div class="pagina">
+  <nav class="migas" aria-label="Ruta">
+    <a href="../index.html">← Autómatas y Agentes</a>
+    <span class="etiqueta">Módulo 1 de 5</span>
+  </nav>
+  <header class="encabezado-modulo">
+    <h1>Pascal en colores</h1>
+    <p>Cada número del triángulo de Pascal es la suma de los dos de arriba. Si en lugar del número miras solo el residuo al dividir entre n, aparecen fractales. Con n = 2 sale el triángulo de Sierpinski.</p>
+  </header>
+  <div id="modulo"></div>
+  <section class="preguntas">
+    <h2>Para explorar</h2>
+    <ol><li>¿Qué pasa con las filas 4, 8, 16 y 32 cuando n = 2?</li><li>Compara n = 3 y n = 5. ¿En qué se parecen los dibujos?</li><li>¿Qué ocurre con n = 4 o n = 6, que no son primos?</li></ol>
+  </section>
+</div>
+<script src="../js/logica.js"></script>
+<script src="../js/config.js"></script>
+<script src="../js/comun.js"></script>
+<script src="../js/mod-pascal.js"></script>
+<script>CM.montar(document.getElementById('modulo'), 'pascal', {"filas":32,"n":2});</script>
+</body>
+</html>

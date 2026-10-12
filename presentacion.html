@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Autómatas y Agentes · Presentación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=JetBrains+Mono:wght@400;700&display=swap">
+<link rel="stylesheet" href="css/estilo.css">
+<style>
+  html, body { height: 100%; }
+  body { overflow: hidden; }
+  .presentacion { position: fixed; inset: 0; display: flex; flex-direction: column; }
+  .diapositivas { position: relative; flex: 1; min-height: 0; }
+  .diapo {
+    position: absolute; inset: 0;
+    display: none; flex-direction: column; gap: 2.2vh;
+    padding-block: 4vh 2vh; padding-inline: max(16px, 4vw);
+    font-size: clamp(16px, min(1.75vw, 3.1vh), 34px);
+  }
+  .diapo.activa { display: flex; }
+  .diapo h2 { font-size: 2.3em; font-weight: 800; }
+  .diapo .sub { color: var(--tinta-2); font-size: 1.05em; max-width: 60ch; }
+  .diapo .cuerpo { flex: 1; min-height: 0; display: flex; gap: 3vw; }
+  .diapo .cuerpo > * { min-width: 0; }
+  .diapo .monta { flex: 1; min-height: 0; }
+  .diapo .monta .modulo { font-size: 15px; }
+  .columna { display: flex; flex-direction: column; gap: 2vh; justify-content: center; }
+  .pregunta { font-family: var(--f-titulo); font-weight: 800; font-size: 1.7em; line-height: 1.15; text-wrap: balance; }
+  .nota { color: var(--tinta-2); }
+
+  /* Barra inferior */
+  .barra {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding-inline: max(16px, 4vw); padding-block: 8px calc(8px + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid var(--linea); background: var(--superficie); font-size: 14px;
+  }
+  .barra .titulo-diapo { color: var(--tinta-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  .barra .acciones { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+  .barra .contador { font-family: var(--f-mono); font-variant-numeric: tabular-nums; min-width: 6ch; text-align: center; }
+  .progreso { height: 3px; background: var(--linea); }
+  .progreso i { display: block; height: 100%; background: var(--acento); width: 0; transition: width 0.25s; }
+
+  /* Portada */
+  .portada { justify-content: center; gap: 4vh; }
+  .portada .tira { height: 22vh; width: 100%; border: 1.5px solid var(--tablero-borde); border-radius: 6px; overflow: hidden; background: var(--cel-muerta); }
+  .portada h1 { font-size: 3.8em; font-weight: 800; max-width: 18ch; }
+  .portada .autor { display: flex; flex-direction: column; gap: 0.3em; font-size: 1.1em; }
+  .portada .autor strong { font-size: 1.15em; }
+
+  /* Concha */
+  .concha { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 3vw; min-height: 0; }
+  .concha figure { margin: 0; display: flex; flex-direction: column; gap: 1vh; min-height: 0; }
+  .concha .marco { flex: 1; min-height: 0; border: 1.5px solid var(--tablero-borde); border-radius: 6px; overflow: hidden; background: var(--cel-muerta); position: relative; }
+  .concha .marco.foto { background: #000; }
+  .concha img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .concha .falta { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; text-align: center; padding: 1em; color: #4d5462; background: repeating-linear-gradient(45deg, #f3f5f8 0 12px, #e9ecf2 12px 24px); font-size: 0.8em; }
+  .concha figcaption { font-size: 0.7em; color: var(--tinta-2); }
+  .concha canvas { position: absolute; inset: 0; }
+
+  /* Casos grandes */
+  .casos-grandes .casos { --gap-casos: 1.2vw; }
+  .casos-grandes .caso .bit { font-size: 1em; color: #15171c; font-weight: 700; }
+  .casos-grandes .casos { padding: 2.2vh 1.5vw; }
+  .regla-texto { font-family: var(--f-titulo); font-size: 1.6em; font-weight: 800; }
+  .binario-grande { font-family: var(--f-mono); font-size: 1.6em; letter-spacing: 0.15em; }
+  .calculo { font-family: var(--f-mono); font-size: 1em; color: var(--tinta-2); }
+
+  /* Clasificación */
+  .cuatro { flex: 1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2vw; min-height: 0; }
+  .cuatro figure { margin: 0; display: flex; flex-direction: column; gap: 1vh; min-height: 0; }
+  .cuatro .marco { flex: 1; min-height: 0; position: relative; border: 1.5px solid var(--tablero-borde); border-radius: 6px; overflow: hidden; background: var(--cel-muerta); }
+  .cuatro canvas { position: absolute; inset: 0; }
+  .cuatro figcaption strong { font-family: var(--f-titulo); font-size: 1.3em; display: block; }
+
+  /* Clases de Wolfram */
+  .clases { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 2vh 3vw; }
+  .clase { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.5vw; min-height: 0; align-items: center; }
+  .clase .marco { position: relative; height: 100%; min-height: 0; border: 1.5px solid var(--tablero-borde); border-radius: 6px; overflow: hidden; background: var(--cel-muerta); }
+  .clase .marco canvas { position: absolute; inset: 0; }
+  .clase strong { font-family: var(--f-titulo); font-size: 1.15em; display: block; }
+  .clase p { color: var(--tinta-2); font-size: 0.9em; }
+  .clase .ej { font-family: var(--f-mono); font-size: 0.8em; }
+  .referencia { font-size: 0.65em; color: var(--tinta-2); }
+
+  /* Matrices de pagos */
+  .bimatriz { border-collapse: separate; border-spacing: 0.3em; font-size: 1.2em; }
+  .bimatriz th { font-weight: 700; font-size: 0.75em; padding: 0.3em 0.6em; }
+  .bimatriz th.esq { display: flex; flex-direction: column; align-items: flex-end; gap: 0.1em; font-size: 0.65em; }
+  .bimatriz td { background: var(--superficie); border: 2px solid var(--linea); border-radius: 8px; padding: 0.6em 1em; font-family: var(--f-mono); font-weight: 700; text-align: center; white-space: nowrap; }
+  .bimatriz td.eq { border-color: var(--acento); background: var(--acento-suave); box-shadow: 0 0 0 2px var(--acento) inset; }
+  .ja, .pa { color: var(--acento); }
+  .jb, .pb { color: var(--naranja); }
+  span.pa, span.pb { font-weight: 800; }
+
+  /* Reglas de juegos */
+  .reglas-lista { display: flex; flex-direction: column; gap: 1.6vh; margin: 0; padding-left: 1.3em; font-size: 1.15em; }
+  .tabla-pagos { border-collapse: separate; border-spacing: 0.35em; font-size: 1.15em; }
+  .tabla-pagos th, .tabla-pagos td { padding: 0.5em 0.9em; text-align: center; border-radius: 8px; }
+  .tabla-pagos thead th { font-weight: 700; color: var(--tinta-2); font-size: 0.85em; }
+  .tabla-pagos td { background: var(--superficie); border: 1.5px solid var(--linea); font-family: var(--f-mono); font-weight: 700; font-size: 1.1em; }
+  .tabla-pagos .s { font-family: var(--f-texto); color: #fff; font-weight: 800; }
+  .tabla-pagos .s.c { background: var(--verde); }
+  .tabla-pagos .s.d { background: var(--rojo); }
+
+  /* Descanso */
+  .descanso { padding: 0; }
+  .descanso .monta { position: absolute; inset: 0; }
+  .descanso .monta .modulo { border: 0; border-radius: 0; height: 100%; }
+  .descanso .monta .modulo-vista { padding: 0; }
+  .descanso .monta .modulo-pie { display: none; }
+  .descanso .letrero { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); background: var(--superficie); border: 2px solid var(--tablero-borde); border-radius: 12px; padding: 3vh 4vw; text-align: center; display: flex; flex-direction: column; gap: 1vh; }
+  .descanso .letrero h2 { font-size: 3.2em; }
+
+  /* Cierre */
+  .cierre .cuerpo { align-items: center; }
+  .qr { width: min(34vh, 30vw); aspect-ratio: 1; max-width: 100%; background: #fff; border-radius: 10px; padding: 8px; flex-shrink: 0; }
+  .qr svg { width: 100%; height: 100%; display: block; }
+  .url { font-family: var(--f-mono); font-size: 0.9em; word-break: break-all; }
+  .enlaces { display: flex; flex-wrap: wrap; gap: 0.6em; }
+
+  @media (max-width: 760px) {
+    .diapo { font-size: 15px; overflow: auto; }
+    .diapo .cuerpo, .concha, .cuatro, .clases { flex-direction: column; display: flex; }
+    .clase .marco { min-height: 140px; }
+    .cuatro .marco, .concha .marco { min-height: 160px; }
+    .diapo .monta { min-height: 70vh; }
+    .modulo.compacto { height: auto; }
+    .modulo.compacto .modulo-area { min-height: 320px; }
+  }
+</style>
+</head>
+<body>
+<div class="presentacion">
+  <div class="progreso"><i id="progreso"></i></div>
+  <main class="diapositivas" id="diapositivas">
+
+    <!-- 1 -->
+    <section class="diapo portada" data-titulo="Portada">
+      <div class="tira" data-regla="30" data-animar="true"><canvas></canvas></div>
+      <h1>De los autómatas celulares a los modelos sociales</h1>
+      <div class="autor">
+        <strong>David Blázquez Sanz</strong>
+        <span>Profesor Titular</span>
+        <span>Universidad Nacional de Colombia – Sede Medellín</span>
+        <span class="nota">Círculos Matemáticos – 2026</span>
+      </div>
+    </section>
+
+    <!-- 2 -->
+    <section class="diapo" data-titulo="¿Cómo surge este dibujo?">
+      <h2>¿Cómo surge este dibujo en una caracola?</h2>
+      <div class="concha">
+        <figure>
+          <div class="marco foto"><img src="img/conus-textile.jpg" alt="Concha de Conus textile" data-foto><div class="falta" hidden><span>Foto de <em>Conus textile</em>: guarda la imagen como img/conus-textile.jpg</span></div></div>
+          <figcaption data-credito><em>Conus textile</em>. Foto: <a href="https://www.malacology-asia.com/">malacology-asia.com</a></figcaption>
+        </figure>
+        <figure>
+          <div class="marco" data-regla="126" data-inicio="azar" data-paleta="concha" data-tam="5" data-animar="true"><canvas></canvas></div>
+          <figcaption>Un dibujo hecho con una regla muy simple: Wolfram 126.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="diapo" data-titulo="Triángulo de Pascal">
+      <h2>El triángulo de Pascal</h2>
+      <p class="sub">Cada número surge combinando los dos números que tiene arriba; así los números combinatorios se generan automáticamente.</p>
+      <div class="monta" data-modulo="pascal" data-opciones='{"filas":8,"n":2,"numeros":true}'></div>
+    </section>
+
+    <!-- 4 -->
+    <section class="diapo" data-titulo="El código de Wolfram">
+      <h2>Una regla es un número binario</h2>
+      <p class="sub">Un vecindario de 3 celdas puede tener 8 configuraciones posibles. Un autómata es una regla que asigna a cada celda una respuesta en función del estado de su vecindario. Estas 8 respuestas, leídas como un número binario, dan un número entre 0 y 255.</p>
+      <div class="cuerpo">
+        <div class="columna" style="flex:1">
+          <div class="casos-grandes" id="casos-codigo"></div>
+          <p class="binario-grande">0 1 0 1 1 0 1 0</p>
+          <p class="calculo">64 + 16 + 8 + 2 = <strong>90</strong></p>
+          <p class="calculo">128 · 64 · 32 · 16 · 8 · 4 · 2 · 1</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 -->
+    <section class="diapo" data-titulo="Autómata humano">
+      <h2>Juguemos a evolucionar como un autómata</h2>
+      <div class="cuerpo">
+        <div class="columna" style="flex:1.4">
+          <div class="casos-grandes" id="casos-humano"></div>
+          <p class="binario-grande" id="binario-humano"></p>
+          <p class="regla-texto" id="texto-humano"></p>
+        </div>
+        <div class="columna" style="flex:1">
+          <ol class="reglas-lista">
+            <li><strong>¡Miren!</strong> Cada uno mira a sus dos vecinos.</li>
+            <li><strong>¡Cambien!</strong> Todos voltean su tarjeta al mismo tiempo.</li>
+            <li>Los extremos tienen un vecino imaginario blanco.</li>
+          </ol>
+          <div class="fila-botones" id="botones-humano"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 -->
+    <section class="diapo" data-titulo="Cuatro tipos de comportamiento">
+      <h2>¿Qué tipo de regla te tocó?</h2>
+      <div class="cuatro">
+        <figure><div class="marco" data-regla="8"><canvas></canvas></div><figcaption><strong>Se muere</strong>Regla 8</figcaption></figure>
+        <figure><div class="marco" data-regla="4"><canvas></canvas></div><figcaption><strong>Se repite</strong>Regla 4</figcaption></figure>
+        <figure><div class="marco" data-regla="90"><canvas></canvas></div><figcaption><strong>Fractal</strong>Regla 90</figcaption></figure>
+        <figure><div class="marco" data-regla="30"><canvas></canvas></div><figcaption><strong>Caos</strong>Regla 30</figcaption></figure>
+      </div>
+    </section>
+
+    <!-- 6b -->
+    <section class="diapo" data-titulo="Clasificación de Wolfram">
+      <h2>Las cuatro clases de Wolfram</h2>
+      <p class="sub">Partiendo de una fila al azar, todo autómata celular cae en una de cuatro clases.</p>
+      <div class="clases">
+        <div class="clase"><div class="marco" data-regla="32" data-inicio="azar" data-descartar="0"><canvas></canvas></div><div><strong>Clase 1 · Uniforme</strong><p>Todo termina en un mismo estado.</p><span class="ej">Reglas 0, 8, 32</span></div></div>
+        <div class="clase"><div class="marco" data-regla="108" data-inicio="azar" data-descartar="0"><canvas></canvas></div><div><strong>Clase 2 · Periódica</strong><p>Quedan estructuras simples, fijas o que se repiten.</p><span class="ej">Reglas 4, 50, 108</span></div></div>
+        <div class="clase"><div class="marco" data-regla="30" data-inicio="azar" data-descartar="0"><canvas></canvas></div><div><strong>Clase 3 · Caótica</strong><p>Patrones desordenados que nunca se repiten.</p><span class="ej">Reglas 30, 45, 90</span></div></div>
+        <div class="clase"><div class="marco" data-regla="110" data-inicio="azar" data-descartar="0"><canvas></canvas></div><div><strong>Clase 4 · Compleja</strong><p>Estructuras que se mueven, chocan e interactúan.</p><span class="ej">Reglas 54, 110</span></div></div>
+      </div>
+      <p class="referencia">S. Wolfram, «Universality and complexity in cellular automata», <em>Physica D</em> 10 (1984) 1–35 · S. Wolfram, <em>A New Kind of Science</em>, Wolfram Media, 2002.</p>
+    </section>
+
+    <!-- 7 -->
+    <section class="diapo" data-titulo="Explorador de reglas">
+      <h2>Explorador de reglas</h2>
+      <div class="monta" data-modulo="wolfram" data-opciones='{"regla":90}'></div>
+    </section>
+
+    <!-- 8 -->
+    <section class="diapo" data-titulo="Volvamos al caracol">
+      <h2>El caracol también sigue una regla local</h2>
+      <p class="sub">Cada célula del borde de la concha pone pigmento o no según lo que hacen sus vecinas. Así, fila a fila, aparece el dibujo.</p>
+      <div class="concha">
+        <figure>
+          <div class="marco foto"><img src="img/conus-textile.jpg" alt="Concha de Conus textile" data-foto><div class="falta" hidden><span>Foto de <em>Conus textile</em>: guarda la imagen como img/conus-textile.jpg</span></div></div>
+          <figcaption data-credito><em>Conus textile</em>. Foto: <a href="https://www.malacology-asia.com/">malacology-asia.com</a></figcaption>
+        </figure>
+        <figure>
+          <div class="marco" data-regla="30" data-animar="true" data-ancho="201" data-paleta="concha"><canvas></canvas></div>
+          <figcaption>Regla 30, desde una sola celda.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 9 -->
+    <section class="diapo" data-titulo="Juego de la Vida">
+      <h2>El Juego de la Vida</h2>
+      <p class="sub">Ahora en un plano. Una celda muerta nace con exactamente 3 vecinas vivas. Una viva sobrevive con 2 o 3. Si no, muere.</p>
+      <p class="referencia">Inventado por John H. Conway (1970) y dado a conocer por Martin Gardner en su columna «Mathematical Games», <em>Scientific American</em>, octubre de 1970.</p>
+      <div class="monta" data-modulo="vida" data-opciones='{"patron":"planeador"}'></div>
+    </section>
+
+    <!-- 10 -->
+    <section class="diapo descanso" data-titulo="Descanso">
+      <div class="monta" data-modulo="vida" data-opciones='{"patron":"azar","soloVista":true,"autoplay":true,"w":120,"h":68}'></div>
+      <div class="letrero">
+        <h2>Descanso</h2>
+      </div>
+    </section>
+
+    <!-- 11b -->
+    <section class="diapo" data-titulo="Matriz de pagos">
+      <h2>Teoría de juegos: la matriz de pagos</h2>
+      <div class="cuerpo">
+        <div class="columna" style="flex:1">
+          <p class="sub">Un juego tiene jugadores, estrategias y pagos. La matriz de pagos dice cuántos puntos gana cada jugador según lo que elijan los dos.</p>
+          <ol class="reglas-lista">
+            <li>El jugador <span class="pa">A</span> elige una fila; el jugador <span class="pb">B</span>, una columna.</li>
+            <li>En cada casilla, el primer número es lo que gana <span class="pa">A</span> y el segundo, lo que gana <span class="pb">B</span>.</li>
+            <li>Ejemplo: dos conductores se cruzan en una vía. Si los dos van por el mismo lado, ganan 1 cada uno; si no, chocan y ganan 0.</li>
+          </ol>
+        </div>
+        <div class="columna" style="flex:1; align-items:center">
+          <table class="bimatriz" aria-label="Matriz de pagos del juego de coordinación"><thead><tr><th class="esq"><span class="jb">B →</span><span class="ja">A ↓</span></th><th class="jb">Derecha</th><th class="jb">Izquierda</th></tr></thead><tbody><tr><th class="ja">Derecha</th><td><span class="pa">1</span>, <span class="pb">1</span></td><td><span class="pa">0</span>, <span class="pb">0</span></td></tr><tr><th class="ja">Izquierda</th><td><span class="pa">0</span>, <span class="pb">0</span></td><td><span class="pa">1</span>, <span class="pb">1</span></td></tr></tbody></table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11c -->
+    <section class="diapo" data-titulo="Equilibrio de Nash">
+      <h2>El equilibrio de Nash</h2>
+      <p class="pregunta">Ningún jugador gana más cambiando él solo de estrategia.</p>
+      <div class="cuerpo">
+        <div class="columna" style="flex:1; align-items:center">
+          <p class="etiqueta">Coordinación: dos equilibrios</p>
+          <table class="bimatriz" aria-label="Juego de coordinación con sus equilibrios de Nash marcados"><thead><tr><th class="esq"><span class="jb">B →</span><span class="ja">A ↓</span></th><th class="jb">Derecha</th><th class="jb">Izquierda</th></tr></thead><tbody><tr><th class="ja">Derecha</th><td class="eq"><span class="pa">1</span>, <span class="pb">1</span></td><td><span class="pa">0</span>, <span class="pb">0</span></td></tr><tr><th class="ja">Izquierda</th><td><span class="pa">0</span>, <span class="pb">0</span></td><td class="eq"><span class="pa">1</span>, <span class="pb">1</span></td></tr></tbody></table>
+          <p class="nota">Cualquier convención sirve, si todos la siguen.</p>
+        </div>
+        <div class="columna" style="flex:1; align-items:center">
+          <p class="etiqueta">Dilema del Prisionero: un equilibrio</p>
+          <table class="bimatriz" aria-label="Dilema del Prisionero con su equilibrio de Nash marcado"><thead><tr><th class="esq"><span class="jb">B →</span><span class="ja">A ↓</span></th><th class="jb">✓ coopera</th><th class="jb">✗ traiciona</th></tr></thead><tbody><tr><th class="ja">✓ coopera</th><td><span class="pa">3</span>, <span class="pb">3</span></td><td><span class="pa">0</span>, <span class="pb">5</span></td></tr><tr><th class="ja">✗ traiciona</th><td><span class="pa">5</span>, <span class="pb">0</span></td><td class="eq"><span class="pa">1</span>, <span class="pb">1</span></td></tr></tbody></table>
+          <p class="nota">Los dos ganarían más cooperando, pero a cada uno le conviene traicionar.</p>
+        </div>
+      </div>
+      <p class="referencia">J. F. Nash, «Equilibrium points in n-person games», <em>Proceedings of the National Academy of Sciences</em> 36 (1950) 48–49.</p>
+    </section>
+
+    <!-- 11a -->
+    <section class="diapo" data-titulo="Juego de la Coordinación">
+      <h2>El Juego de la Coordinación</h2>
+      <div class="cuerpo">
+        <div class="columna" style="flex:1.2">
+          <ol class="reglas-lista">
+            <li>A la cuenta de tres, todos muestran un color.</li>
+            <li>Ganas 1 punto por cada vecino con tu mismo color.</li>
+            <li>Si la mayoría de tus vecinos tiene otro color, en la siguiente ronda cambias a ese color. Con empate te quedas.</li>
+          </ol>
+        </div>
+        <div class="columna" style="flex:1">
+          <p class="pregunta">¿Cómo alcanzamos convenciones sociales?</p>
+          <p class="pregunta">¿Por qué todos sabemos que debemos conducir por la derecha?</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12 -->
+    <section class="diapo" data-titulo="Coordinación en red">
+      <h2>Convenciones que aparecen solas</h2>
+      <div class="monta" data-modulo="coordinacion" data-opciones='{"n":5}'></div>
+    </section>
+
+    <!-- 13 -->
+    <section class="diapo" data-titulo="Dilema del Prisionero">
+      <h2>El Dilema del Prisionero</h2>
+      <div class="cuerpo">
+        <div class="columna" style="flex:1">
+          <table class="tabla-pagos" aria-label="Puntos para mí según lo que jueguen mi vecino y yo">
+            <thead><tr><th>yo \ mi vecino</th><th>✓ coopera</th><th>✗ traiciona</th></tr></thead>
+            <tbody>
+              <tr><th class="s c">✓ coopero</th><td>3</td><td>0</td></tr>
+              <tr><th class="s d">✗ traiciono</th><td>5</td><td>1</td></tr>
+            </tbody>
+          </table>
+          <p class="nota">Los números son mis puntos.</p>
+        </div>
+        <div class="columna" style="flex:1.1">
+          <ol class="reglas-lista">
+            <li>Juego con cada uno de mis vecinos y sumo mis puntos.</li>
+            <li>Miro los puntos de mis vecinos.</li>
+            <li>Copio la estrategia del vecino con más puntos, si tiene más que yo.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- 14 -->
+    <section class="diapo" data-titulo="Dilema en red">
+      <h2>¿Sobrevive la cooperación?</h2>
+      <div class="monta" data-modulo="dilema" data-opciones='{"n":5,"escenario":"B"}'></div>
+    </section>
+
+    <!-- 15 -->
+    <section class="diapo" data-titulo="Reflexión">
+      <h2>Para pensar</h2>
+      <div class="cuerpo">
+        <div class="columna" style="flex:1">
+          <p class="pregunta">¿Qué hizo que la cooperación sobreviviera en un caso y no en el otro?</p>
+          <p class="pregunta">¿Dónde en tu vida hay un barrio cooperador? ¿Y un traidor que se contagia?</p>
+          <p class="pregunta">¿Una convención mala se puede cambiar?</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 16 -->
+    <section class="diapo cierre" data-titulo="Cierre">
+      <h2>Reglas locales, patrones globales</h2>
+      <div class="cuerpo">
+        <div class="qr" id="qr-cierre"></div>
+        <div class="columna" style="flex:1">
+          <p class="sub">Escribe en tu cuaderno una situación de tu vida que sea un dilema del prisionero.</p>
+          <p>Sigue explorando en casa:</p>
+          <p class="url" id="url-cierre"></p>
+          <div class="enlaces">
+            <a class="btn" href="modulos/pascal.html">Pascal</a>
+            <a class="btn" href="modulos/reglas.html">Reglas 1D</a>
+            <a class="btn" href="modulos/vida.html">Juego de la Vida</a>
+            <a class="btn" href="modulos/coordinacion.html">Coordinación</a>
+            <a class="btn" href="modulos/dilema.html">Dilema</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+  <nav class="barra" aria-label="Navegación de la presentación">
+    <span class="titulo-diapo" id="titulo-diapo"></span>
+    <div class="acciones">
+      <a class="btn" href="index.html">Inicio</a>
+      <button class="btn" type="button" id="anterior" aria-label="Diapositiva anterior">←</button>
+      <span class="contador" id="contador"></span>
+      <button class="btn" type="button" id="siguiente" aria-label="Diapositiva siguiente">→</button>
+      <button class="btn" type="button" id="pantalla">Pantalla completa</button>
+    </div>
+  </nav>
+</div>
+
+<script src="js/vendor/qrcode.js"></script>
+<script src="js/logica.js"></script>
+<script src="js/config.js"></script>
+<script src="js/comun.js"></script>
+<script src="js/mod-pascal.js"></script>
+<script src="js/mod-wolfram.js"></script>
+<script src="js/mod-vida.js"></script>
+<script src="js/mod-coordinacion.js"></script>
+<script src="js/mod-dilema.js"></script>
+<script src="js/presentacion.js"></script>
+</body>
+</html>

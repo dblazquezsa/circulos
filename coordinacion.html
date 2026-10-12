@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Juego de la Coordinación · Autómatas y Agentes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=JetBrains+Mono:wght@400;700&display=swap">
+<link rel="stylesheet" href="../css/estilo.css">
+<style>
+  .preguntas { display: flex; flex-direction: column; gap: 10px; max-width: 70ch; }
+  .preguntas ol { margin: 0; padding-left: 1.3em; display: flex; flex-direction: column; gap: 6px; }
+  .preguntas h2 { font-size: 1.3rem; }
+</style>
+</head>
+<body>
+<div class="pagina">
+  <nav class="migas" aria-label="Ruta">
+    <a href="../index.html">← Autómatas y Agentes</a>
+    <span class="etiqueta">Módulo 4 de 5</span>
+  </nav>
+  <header class="encabezado-modulo">
+    <h1>Coordinación en red</h1>
+    <p>Cada casilla elige un color y gana cuando coincide con sus vecinos. Si copia el color de la mayoría de sus vecinos, aparecen zonas de un mismo color, como convenciones que nadie decidió.</p>
+  </header>
+  <div id="modulo"></div>
+  <section class="preguntas">
+    <h2>Para explorar</h2>
+    <ol><li>¿Cuántas rondas tarda en estabilizarse una cuadrícula de 30 × 30?</li><li>Marca unos pocos tercos en el centro. ¿Pueden cambiar a todo el tablero?</li><li>¿Las fronteras entre zonas se mueven o se quedan quietas?</li><li>Compara «Imitar al mejor» con «Mejor respuesta» desde el mismo tablero. ¿Cuál llega antes a una convención?</li></ol>
+  </section>
+</div>
+<script src="../js/logica.js"></script>
+<script src="../js/config.js"></script>
+<script src="../js/comun.js"></script>
+<script src="../js/mod-coordinacion.js"></script>
+<script>CM.montar(document.getElementById('modulo'), 'coordinacion', {"n":30});</script>
+</body>
+</html>

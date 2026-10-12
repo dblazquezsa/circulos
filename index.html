@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Autómatas y Agentes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=JetBrains+Mono:wght@400;700&display=swap">
+<link rel="stylesheet" href="css/estilo.css">
+<style>
+  .portada-inicio { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 32px; align-items: end; }
+  .portada-inicio h1 { font-size: clamp(2.3rem, 6vw, 4.4rem); font-weight: 800; max-width: 16ch; }
+  .portada-inicio .lema { color: var(--tinta-2); font-size: 1.1rem; max-width: 52ch; }
+  .portada-inicio .texto { display: flex; flex-direction: column; gap: 18px; }
+  .tira-inicio { height: 120px; border: 1.5px solid var(--tablero-borde); border-radius: 8px; overflow: hidden; background: var(--cel-muerta); position: relative; }
+  .tira-inicio canvas { position: absolute; inset: 0; }
+  .lado { display: flex; gap: 16px; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
+  .qr-inicio { width: 132px; height: 132px; background: #fff; border-radius: 8px; padding: 6px; border: 1.5px solid var(--linea); flex-shrink: 0; }
+  .qr-inicio svg { width: 100%; height: 100%; display: block; }
+  .lado p { font-size: 0.9rem; color: var(--tinta-2); max-width: 24ch; }
+  .lado .mono { word-break: break-all; }
+  .tarjetas { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; }
+  .tarjeta { display: flex; flex-direction: column; background: var(--superficie); border: 1.5px solid var(--linea); border-radius: var(--radio); overflow: hidden; text-decoration: none; color: inherit; }
+  .tarjeta:hover { border-color: var(--acento); }
+  .tarjeta .vista { height: 170px; position: relative; border-bottom: 1.5px solid var(--linea); background: var(--cel-muerta); }
+  .tarjeta .vista canvas { position: absolute; inset: 0; }
+  .tarjeta .info { padding: 14px 16px 18px; display: flex; flex-direction: column; gap: 6px; }
+  .tarjeta h2 { font-size: 1.35rem; }
+  .tarjeta p { color: var(--tinta-2); font-size: 0.95rem; }
+  .bloque-titulo { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .bloque-titulo h2 { font-size: 1.5rem; }
+  footer { color: var(--tinta-2); font-size: 0.9rem; border-top: 1px solid var(--linea); padding-top: 16px; }
+  @media (max-width: 760px) {
+    .portada-inicio { grid-template-columns: minmax(0, 1fr); }
+    .lado { justify-content: flex-start; }
+  }
+</style>
+</head>
+<body>
+<div class="pagina">
+  <header class="portada-inicio">
+    <div class="texto">
+      <span class="etiqueta">Círculos Matemáticos · Medellín</span>
+      <h1>De los autómatas celulares a los modelos sociales</h1>
+      <p class="lema">Reglas locales muy simples producen patrones globales sorprendentes: fractales, caos, vida artificial, convenciones y cooperación.</p>
+      <div class="fila-botones"><a class="btn principal" href="presentacion.html">Abrir la presentación</a></div>
+    </div>
+    <div class="lado">
+      <div class="qr-inicio" id="qr"></div>
+      <p id="url-texto">Escanea el código para abrir esta página en tu celular.</p>
+    </div>
+  </header>
+
+  <div class="tira-inicio" data-regla="110"><canvas></canvas></div>
+
+  <section class="bloque-titulo">
+    <h2>Módulos para explorar</h2>
+    <span class="etiqueta">Funcionan en computador y celular</span>
+  </section>
+
+  <div class="tarjetas">
+    <a class="tarjeta" href="modulos/pascal.html">
+      <div class="vista" data-vista="pascal"><canvas></canvas></div>
+      <div class="info"><span class="etiqueta">Módulo 1</span><h2>Pascal en colores</h2><p>El triángulo de Pascal coloreado según el residuo módulo n.</p></div>
+    </a>
+    <a class="tarjeta" href="modulos/reglas.html">
+      <div class="vista" data-vista="reglas"><canvas></canvas></div>
+      <div class="info"><span class="etiqueta">Módulo 2</span><h2>Las 256 reglas</h2><p>Autómatas celulares en una dimensión: cada regla es un número entre 0 y 255.</p></div>
+    </a>
+    <a class="tarjeta" href="modulos/vida.html">
+      <div class="vista" data-vista="vida"><canvas></canvas></div>
+      <div class="info"><span class="etiqueta">Módulo 3</span><h2>El Juego de la Vida</h2><p>Dibuja patrones y míralos nacer, moverse y morir.</p></div>
+    </a>
+    <a class="tarjeta" href="modulos/coordinacion.html">
+      <div class="vista" data-vista="coordinacion"><canvas></canvas></div>
+      <div class="info"><span class="etiqueta">Módulo 4</span><h2>Coordinación en red</h2><p>Cómo aparecen las convenciones cuando todos copian a la mayoría de sus vecinos.</p></div>
+    </a>
+    <a class="tarjeta" href="modulos/dilema.html">
+      <div class="vista" data-vista="dilema"><canvas></canvas></div>
+      <div class="info"><span class="etiqueta">Módulo 5</span><h2>Dilema del Prisionero</h2><p>¿Puede sobrevivir la cooperación cuando traicionar paga más?</p></div>
+    </a>
+  </div>
+
+  <footer>David Blázquez Sanz · Universidad Nacional de Colombia, Sede Medellín · Círculos Matemáticos</footer>
+</div>
+
+<script src="js/vendor/qrcode.js"></script>
+<script src="js/logica.js"></script>
+<script src="js/config.js"></script>
+<script src="js/comun.js"></script>
+<script src="js/mod-pascal.js"></script>
+<script>
+(function () {
+  const L = CM.L;
+  function preparar(el) {
+    const cv = el.querySelector('canvas');
+    const w = el.clientWidth, h = el.clientHeight, d = window.devicePixelRatio || 1;
+    cv.width = Math.round(w * d); cv.height = Math.round(h * d);
+    cv.style.width = w + 'px'; cv.style.height = h + 'px';
+    const ctx = cv.getContext('2d');
+    ctx.setTransform(d, 0, 0, d, 0, 0);
+    return { ctx, w, h };
+  }
+  function cuadricula(ctx, w, h, n, colores, est) {
+    const lado = Math.min(w, h) / n, ox = (w - lado * n) / 2, oy = (h - lado * n) / 2;
+    ctx.fillStyle = CM.token('superficie');
+    ctx.fillRect(0, 0, w, h);
+    for (let k = 0; k < n * n; k++) {
+      ctx.fillStyle = colores[est[k]];
+      ctx.fillRect(ox + (k % n) * lado, oy + Math.floor(k / n) * lado, Math.ceil(lado), Math.ceil(lado));
+    }
+  }
+  const vistas = {
+    pascal(el) { const { ctx, w, h } = preparar(el); ctx.fillStyle = CM.token('cel-muerta'); ctx.fillRect(0, 0, w, h); CM.dibujarPascal(ctx, w, h, 64, 2); },
+    reglas(el) { const { ctx, w, h } = preparar(el); CM.dibujarRegla(ctx, w, h, 30, null, { tam: 2, ancho: Math.floor(w / 2) }); },
+    vida(el) {
+      const { ctx, w, h } = preparar(el);
+      const W = 64, H = 32;
+      let c = new Uint8Array(W * H);
+      for (const [x, y] of L.rle(CM.patronesVidaGosper)) c[(y + 2) * W + x + 2] = 1;
+      for (let t = 0; t < 90; t++) c = L.vidaPaso(c, W, H);
+      const lado = Math.min(w / W, h / H), ox = (w - lado * W) / 2, oy = (h - lado * H) / 2;
+      ctx.fillStyle = CM.token('cel-muerta'); ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = CM.token('cel-viva');
+      for (let k = 0; k < W * H; k++) if (c[k]) ctx.fillRect(ox + (k % W) * lado + 0.5, oy + Math.floor(k / W) * lado + 0.5, lado - 1, lado - 1);
+    },
+    coordinacion(el) {
+      const { ctx, w, h } = preparar(el);
+      const n = 40; let s = new Uint8Array(n * n);
+      let x = 7; const r = () => ((x = (x * 16807) % 2147483647) / 2147483647);
+      for (let k = 0; k < n * n; k++) s[k] = r() < 0.5 ? 1 : 0;
+      for (let t = 0; t < 6; t++) s = L.coordPaso(s, null, n);
+      cuadricula(ctx, w, h, n, [CM.token('amarillo'), CM.token('azul')], s);
+    },
+    dilema(el) {
+      const { ctx, w, h } = preparar(el);
+      const n = 61; let s = L.escenario('caleidoscopio', n), prev = s;
+      const op = { pagos: { R: 1, T: 1.85, S: 0, P: 0 }, moore: true, propio: true };
+      for (let t = 0; t < 26; t++) { prev = s; s = L.dilemaPaso(s, n, op).nuevo; }
+      const mezcla = new Uint8Array(n * n);
+      for (let k = 0; k < n * n; k++) mezcla[k] = s[k] ? (prev[k] ? 0 : 2) : (prev[k] ? 3 : 1);
+      cuadricula(ctx, w, h, n, [CM.token('verde'), CM.token('rojo'), CM.token('verde-claro'), CM.token('naranja')], mezcla);
+    },
+  };
+  CM.patronesVidaGosper = '24bo$22bobo$12b2o6b2o12b2o$11bo3bo4b2o12b2o$2o8bo5bo3b2o$2o8bo3bob2o4bobo$10bo5bo7bo$11bo3bo$12b2o!';
+  function todo() {
+    document.querySelectorAll('[data-vista]').forEach((el) => vistas[el.dataset.vista](el));
+    const tira = document.querySelector('.tira-inicio');
+    const p = preparar(tira);
+    const ancho = Math.floor(p.w / 3);
+    CM.dibujarRegla(p.ctx, p.w, p.h, 110, null, { tam: 3, ancho, inicio: L.ca1dFilaInicial(ancho, 'azar', (() => { let x = 11; return () => ((x = (x * 16807) % 2147483647) / 2147483647); })()) });
+  }
+  todo();
+  let t = 0;
+  window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(todo, 150); });
+  window.addEventListener('cm-tema', todo);
+
+  const url = CM.urlSitio();
+  if (CM.dibujarQR(document.getElementById('qr'), url)) document.getElementById('url-texto').innerHTML = 'Escanea para abrir en tu celular:<br><span class="mono">' + url.replace(/^https?:\/\//, '') + '</span>';
+  else document.getElementById('qr').hidden = true;
+})();
+</script>
+</body>
+</html>
